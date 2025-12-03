@@ -136,7 +136,8 @@
       }
 
       .container.show .name {
-        animation: fadeInUp 1s ease 0.5s forwards, gradientShift 3s ease infinite;
+        animation: fadeInUp 1s ease 0.5s forwards,
+          gradientShift 3s ease infinite;
       }
 
       .message {
@@ -206,7 +207,8 @@
       }
 
       @keyframes gradientShift {
-        0%, 100% {
+        0%,
+        100% {
           background-position: 0% 50%;
         }
         50% {
@@ -215,7 +217,8 @@
       }
 
       @keyframes bounce {
-        0%, 100% {
+        0%,
+        100% {
           transform: translateY(0);
         }
         50% {
@@ -224,7 +227,8 @@
       }
 
       @keyframes float {
-        0%, 100% {
+        0%,
+        100% {
           transform: translateY(0) translateX(0) rotate(0deg);
           opacity: 0;
         }
@@ -282,7 +286,9 @@
     <!-- Countdown Screen -->
     <div class="countdown-screen" id="countdownScreen">
       <div class="countdown-timer" id="countdownTimer">00:00:00</div>
-      <div class="countdown-text">Menghitung detik menuju hari spesialmu...</div>
+      <div class="countdown-text">
+        Menghitung detik menuju hari spesialmu...
+      </div>
     </div>
 
     <!-- Birthday Content -->
@@ -299,33 +305,36 @@
 
     <!-- Background Music -->
     <audio id="bgMusic" loop>
-      <source src="https://cdn.pixabay.com/audio/2022/03/10/audio_c8a7d0f57a.mp3" type="audio/mpeg">
+      <source
+        src="https://cdn.pixabay.com/audio/2022/08/02/audio_884a5119f5.mp3"
+        type="audio/mpeg"
+      />
     </audio>
 
     <script>
       // Set target date (December 4, 2025, 00:00:00)
-      const targetDate = new Date('2025-12-04T00:00:00').getTime();
-      
+      const targetDate = new Date("2025-12-04T00:00:00").getTime();
+
       // Elements
-      const clockEl = document.getElementById('clock');
-      const countdownScreen = document.getElementById('countdownScreen');
-      const countdownTimer = document.getElementById('countdownTimer');
-      const birthdayContent = document.getElementById('birthdayContent');
-      const bgMusic = document.getElementById('bgMusic');
-      const musicControl = document.getElementById('musicControl');
-      const musicIcon = document.getElementById('musicIcon');
-      
+      const clockEl = document.getElementById("clock");
+      const countdownScreen = document.getElementById("countdownScreen");
+      const countdownTimer = document.getElementById("countdownTimer");
+      const birthdayContent = document.getElementById("birthdayContent");
+      const bgMusic = document.getElementById("bgMusic");
+      const musicControl = document.getElementById("musicControl");
+      const musicIcon = document.getElementById("musicIcon");
+
       let isMusicPlaying = false;
 
       // Music control
-      musicControl.addEventListener('click', () => {
+      musicControl.addEventListener("click", () => {
         if (isMusicPlaying) {
           bgMusic.pause();
-          musicIcon.textContent = '🔇';
+          musicIcon.textContent = "🔇";
           isMusicPlaying = false;
         } else {
-          bgMusic.play().catch(e => console.log('Audio play failed:', e));
-          musicIcon.textContent = '🔊';
+          bgMusic.play().catch((e) => console.log("Audio play failed:", e));
+          musicIcon.textContent = "🔊";
           isMusicPlaying = true;
         }
       });
@@ -333,9 +342,9 @@
       // Update clock
       function updateClock() {
         const now = new Date();
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        const seconds = String(now.getSeconds()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, "0");
+        const minutes = String(now.getMinutes()).padStart(2, "0");
+        const seconds = String(now.getSeconds()).padStart(2, "0");
         clockEl.textContent = `${hours}:${minutes}:${seconds}`;
       }
 
@@ -346,44 +355,64 @@
 
         if (distance <= 0) {
           // Birthday time! Show birthday content
-          countdownScreen.classList.add('hidden');
-          birthdayContent.classList.add('show');
-          
+          countdownScreen.classList.add("hidden");
+          birthdayContent.classList.add("show");
+
           // Try to play music
-          bgMusic.play().then(() => {
-            isMusicPlaying = true;
-            musicIcon.textContent = '🔊';
-          }).catch(e => {
-            console.log('Auto-play blocked, user can click to play');
-          });
-          
+          bgMusic
+            .play()
+            .then(() => {
+              isMusicPlaying = true;
+              musicIcon.textContent = "🔊";
+            })
+            .catch((e) => {
+              console.log("Auto-play blocked, user can click to play");
+            });
+
           // Create confetti burst
           createConfettiBurst();
           return;
         }
 
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const hours = Math.floor(
+          (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        countdownTimer.textContent = 
-          `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        countdownTimer.textContent = `${String(hours).padStart(
+          2,
+          "0"
+        )}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(
+          2,
+          "0"
+        )}`;
       }
 
       // Create confetti burst
       function createConfettiBurst() {
-        const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffd700', '#ff1493'];
-        
+        const colors = [
+          "#ff0000",
+          "#00ff00",
+          "#0000ff",
+          "#ffff00",
+          "#ff00ff",
+          "#00ffff",
+          "#ffd700",
+          "#ff1493",
+        ];
+
         for (let i = 0; i < 100; i++) {
           setTimeout(() => {
-            const confetti = document.createElement('div');
-            confetti.className = 'confetti';
-            confetti.style.left = Math.random() * 100 + '%';
-            confetti.style.top = '-10px';
-            confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
-            confetti.style.width = (Math.random() * 10 + 5) + 'px';
-            confetti.style.height = (Math.random() * 10 + 5) + 'px';
-            confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            const confetti = document.createElement("div");
+            confetti.className = "confetti";
+            confetti.style.left = Math.random() * 100 + "%";
+            confetti.style.top = "-10px";
+            confetti.style.background =
+              colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.width = Math.random() * 10 + 5 + "px";
+            confetti.style.height = Math.random() * 10 + 5 + "px";
+            confetti.style.animationDuration = Math.random() * 2 + 2 + "s";
             document.body.appendChild(confetti);
 
             setTimeout(() => confetti.remove(), 3000);
@@ -393,11 +422,11 @@
 
       // Create floating particles
       function createParticle() {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.animationDelay = Math.random() * 6 + 's';
-        particle.style.animationDuration = Math.random() * 3 + 4 + 's';
+        const particle = document.createElement("div");
+        particle.className = "particle";
+        particle.style.left = Math.random() * 100 + "%";
+        particle.style.animationDelay = Math.random() * 6 + "s";
+        particle.style.animationDuration = Math.random() * 3 + 4 + "s";
         document.body.appendChild(particle);
 
         setTimeout(() => particle.remove(), 8000);
@@ -417,10 +446,10 @@
 
       // Check if already past birthday time on load
       if (new Date().getTime() >= targetDate) {
-        countdownScreen.classList.add('hidden');
-        birthdayContent.classList.add('show');
+        countdownScreen.classList.add("hidden");
+        birthdayContent.classList.add("show");
         createConfettiBurst();
       }
     </script>
   </body>
-</html
+</html>
