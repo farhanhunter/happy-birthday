@@ -22,20 +22,105 @@
         position: relative;
       }
 
+      /* Clock in corner */
+      .clock {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        color: white;
+        font-size: 1.5rem;
+        font-weight: 300;
+        opacity: 0.8;
+        text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+        z-index: 100;
+      }
+
+      /* Music control */
+      .music-control {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+        z-index: 100;
+      }
+
+      .music-control:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.1);
+      }
+
+      .music-control span {
+        font-size: 1.5rem;
+      }
+
+      /* Countdown screen */
+      .countdown-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        z-index: 50;
+        transition: opacity 0.5s ease;
+      }
+
+      .countdown-screen.hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .countdown-timer {
+        font-size: 6rem;
+        font-weight: bold;
+        margin-bottom: 2rem;
+        text-shadow: 3px 3px 20px rgba(0, 0, 0, 0.5);
+      }
+
+      .countdown-text {
+        font-size: 1.5rem;
+        opacity: 0.9;
+        text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Birthday content */
       .container {
         text-align: center;
         color: white;
         z-index: 10;
         padding: 20px;
         max-width: 600px;
+        opacity: 0;
+        transition: opacity 1s ease;
+      }
+
+      .container.show {
+        opacity: 1;
       }
 
       h1 {
         font-size: 3.5rem;
         margin-bottom: 1rem;
         opacity: 0;
-        animation: fadeInUp 1s ease forwards;
         text-shadow: 2px 2px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      .container.show h1 {
+        animation: fadeInUp 1s ease forwards;
       }
 
       .name {
@@ -43,30 +128,33 @@
         font-weight: bold;
         margin: 2rem 0;
         opacity: 0;
-        animation: fadeInUp 1s ease 0.5s forwards;
         background: linear-gradient(45deg, #fff, #ffd1dc, #fff);
         background-size: 200% 200%;
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
-        animation: fadeInUp 1s ease 0.5s forwards,
-          gradientShift 3s ease infinite;
+      }
+
+      .container.show .name {
+        animation: fadeInUp 1s ease 0.5s forwards, gradientShift 3s ease infinite;
       }
 
       .message {
         font-size: 1.3rem;
         line-height: 1.8;
         opacity: 0;
-        animation: fadeInUp 1s ease 1s forwards;
         margin: 2rem 0;
         text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .container.show .message {
+        animation: fadeInUp 1s ease 1s forwards;
       }
 
       .quote {
         font-size: 1.5rem;
         font-style: italic;
         opacity: 0;
-        animation: fadeInUp 1s ease 1.5s forwards;
         margin-top: 3rem;
         padding: 1.5rem;
         background: rgba(255, 255, 255, 0.1);
@@ -75,10 +163,24 @@
         border: 1px solid rgba(255, 255, 255, 0.2);
       }
 
+      .container.show .quote {
+        animation: fadeInUp 1s ease 1.5s forwards;
+      }
+
       .emoji {
         font-size: 3rem;
         display: inline-block;
         animation: bounce 2s ease infinite;
+      }
+
+      /* Confetti */
+      .confetti {
+        position: fixed;
+        width: 10px;
+        height: 10px;
+        background: #f0f;
+        position: absolute;
+        animation: confetti-fall 3s linear forwards;
       }
 
       /* Floating particles */
@@ -104,8 +206,7 @@
       }
 
       @keyframes gradientShift {
-        0%,
-        100% {
+        0%, 100% {
           background-position: 0% 50%;
         }
         50% {
@@ -114,8 +215,7 @@
       }
 
       @keyframes bounce {
-        0%,
-        100% {
+        0%, 100% {
           transform: translateY(0);
         }
         50% {
@@ -124,8 +224,7 @@
       }
 
       @keyframes float {
-        0%,
-        100% {
+        0%, 100% {
           transform: translateY(0) translateX(0) rotate(0deg);
           opacity: 0;
         }
@@ -140,7 +239,22 @@
         }
       }
 
+      @keyframes confetti-fall {
+        to {
+          transform: translateY(100vh) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
       @media (max-width: 768px) {
+        .clock {
+          font-size: 1.2rem;
+          top: 10px;
+          right: 10px;
+        }
+        .countdown-timer {
+          font-size: 4rem;
+        }
         h1 {
           font-size: 2.5rem;
         }
@@ -157,7 +271,22 @@
     </style>
   </head>
   <body>
-    <div class="container">
+    <!-- Clock -->
+    <div class="clock" id="clock">00:00:00</div>
+
+    <!-- Music Control -->
+    <div class="music-control" id="musicControl" title="Toggle Music">
+      <span id="musicIcon">🔊</span>
+    </div>
+
+    <!-- Countdown Screen -->
+    <div class="countdown-screen" id="countdownScreen">
+      <div class="countdown-timer" id="countdownTimer">00:00:00</div>
+      <div class="countdown-text">Menghitung detik menuju hari spesialmu...</div>
+    </div>
+
+    <!-- Birthday Content -->
+    <div class="container" id="birthdayContent">
       <h1>Happy Birthday <span class="emoji">🎂</span></h1>
       <div class="name">Natalie Angeline</div>
       <div class="message">
@@ -168,28 +297,130 @@
       <div class="quote">"Semangat hidup dan tetaplah hidup" ✨</div>
     </div>
 
-    <script>
-      // Create floating particles
-      function createParticle() {
-        const particle = document.createElement("div");
-        particle.className = "particle";
-        particle.style.left = Math.random() * 100 + "%";
-        particle.style.animationDelay = Math.random() * 6 + "s";
-        particle.style.animationDuration = Math.random() * 3 + 4 + "s";
-        document.body.appendChild(particle);
+    <!-- Background Music -->
+    <audio id="bgMusic" loop>
+      <source src="https://cdn.pixabay.com/audio/2022/03/10/audio_c8a7d0f57a.mp3" type="audio/mpeg">
+    </audio>
 
-        setTimeout(() => {
-          particle.remove();
-        }, 8000);
+    <script>
+      // Set target date (December 4, 2025, 00:00:00)
+      const targetDate = new Date('2025-12-04T00:00:00').getTime();
+      
+      // Elements
+      const clockEl = document.getElementById('clock');
+      const countdownScreen = document.getElementById('countdownScreen');
+      const countdownTimer = document.getElementById('countdownTimer');
+      const birthdayContent = document.getElementById('birthdayContent');
+      const bgMusic = document.getElementById('bgMusic');
+      const musicControl = document.getElementById('musicControl');
+      const musicIcon = document.getElementById('musicIcon');
+      
+      let isMusicPlaying = false;
+
+      // Music control
+      musicControl.addEventListener('click', () => {
+        if (isMusicPlaying) {
+          bgMusic.pause();
+          musicIcon.textContent = '🔇';
+          isMusicPlaying = false;
+        } else {
+          bgMusic.play().catch(e => console.log('Audio play failed:', e));
+          musicIcon.textContent = '🔊';
+          isMusicPlaying = true;
+        }
+      });
+
+      // Update clock
+      function updateClock() {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        clockEl.textContent = `${hours}:${minutes}:${seconds}`;
       }
 
-      // Generate particles continuously
+      // Update countdown
+      function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = targetDate - now;
+
+        if (distance <= 0) {
+          // Birthday time! Show birthday content
+          countdownScreen.classList.add('hidden');
+          birthdayContent.classList.add('show');
+          
+          // Try to play music
+          bgMusic.play().then(() => {
+            isMusicPlaying = true;
+            musicIcon.textContent = '🔊';
+          }).catch(e => {
+            console.log('Auto-play blocked, user can click to play');
+          });
+          
+          // Create confetti burst
+          createConfettiBurst();
+          return;
+        }
+
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        countdownTimer.textContent = 
+          `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+      }
+
+      // Create confetti burst
+      function createConfettiBurst() {
+        const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffd700', '#ff1493'];
+        
+        for (let i = 0; i < 100; i++) {
+          setTimeout(() => {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + '%';
+            confetti.style.top = '-10px';
+            confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.width = (Math.random() * 10 + 5) + 'px';
+            confetti.style.height = (Math.random() * 10 + 5) + 'px';
+            confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            document.body.appendChild(confetti);
+
+            setTimeout(() => confetti.remove(), 3000);
+          }, i * 30);
+        }
+      }
+
+      // Create floating particles
+      function createParticle() {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 6 + 's';
+        particle.style.animationDuration = Math.random() * 3 + 4 + 's';
+        document.body.appendChild(particle);
+
+        setTimeout(() => particle.remove(), 8000);
+      }
+
+      // Initialize
+      updateClock();
+      updateCountdown();
+      setInterval(updateClock, 1000);
+      setInterval(updateCountdown, 1000);
       setInterval(createParticle, 300);
 
       // Create initial particles
       for (let i = 0; i < 20; i++) {
         setTimeout(createParticle, i * 100);
       }
+
+      // Check if already past birthday time on load
+      if (new Date().getTime() >= targetDate) {
+        countdownScreen.classList.add('hidden');
+        birthdayContent.classList.add('show');
+        createConfettiBurst();
+      }
     </script>
   </body>
-</html>
+</html
