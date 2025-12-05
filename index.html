@@ -345,17 +345,15 @@
         clockEl.textContent = `${hours}:${minutes}:${seconds}`;
       }
 
-      // Update countdown
+      // Update countdown dengan HARI
       function updateCountdown() {
         const now = new Date().getTime();
         const distance = targetDate - now;
 
         if (distance <= 0) {
-          // Birthday time! Show birthday content
           countdownScreen.classList.add("hidden");
           birthdayContent.classList.add("show");
 
-          // Try to play music
           bgMusic
             .play()
             .then(() => {
@@ -366,18 +364,20 @@
               console.log("Auto-play blocked, user can click to play");
             });
 
-          // Create confetti burst
           createConfettiBurst();
           return;
         }
 
+        // Hitung hari, jam, menit, detik
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
         const hours = Math.floor(
           (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
         );
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        countdownTimer.textContent = `${String(hours).padStart(
+        // Tampilkan dengan format: 364 Hari 23:59:59
+        countdownTimer.textContent = `${days} Hari ${String(hours).padStart(
           2,
           "0"
         )}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(
